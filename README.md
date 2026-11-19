@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
@@ -27,7 +27,7 @@
         @keyframes fallPetal {
             0% {
                 transform: translateY(-20px) translateX(0) rotate(0deg);
-                opacity: 0.9;
+                opacity: 0.95;
             }
             100% {
                 transform: translateY(105vh) translateX(45px) rotate(360deg);
@@ -44,10 +44,17 @@
             transform: translateY(0);
         }
         .envelope-card {
-            background: rgba(255, 255, 255, 0.88);
+            background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(14px);
             border: 1px solid rgba(251, 113, 133, 0.35);
             box-shadow: 0 24px 60px rgba(225, 29, 72, 0.14);
+        }
+        @keyframes popSurprise {
+            0% { transform: scale(0.92); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .surprise-pop {
+            animation: popSurprise 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
         }
     </style>
 </head>
@@ -76,18 +83,21 @@
         </button>
 
         <button onclick="toggleEditor()" class="text-xs font-semibold text-rose-600 hover:underline cursor-pointer">
-            ✏️ Tùy chỉnh nội dung bức thư
+            ✏️ Tùy chỉnh nội dung bức thư & điều bất ngờ
         </button>
 
         <div id="editorBox" class="hidden text-left space-y-3 pt-2 border-t border-rose-100">
             <div>
                 <label class="block text-[11px] font-bold text-slate-600 mb-1">Các dòng thư (mỗi dòng là một đoạn hiện dần):</label>
-                <textarea id="linesInput" rows="6" class="w-full p-3 text-xs rounded-xl bg-white border border-rose-200 text-slate-700 focus:outline-none focus:border-rose-400">Mẹ kính yêu,
+                <textarea id="linesInput" rows="5" class="w-full p-3 text-xs rounded-xl bg-white border border-rose-200 text-slate-700 focus:outline-none focus:border-rose-400">Mẹ kính yêu,
 Nhân ngày 20/11 và cũng là ngày sinh nhật của mẹ, con muốn gửi tới mẹ thật nhiều yêu thương.
 Cảm ơn mẹ vì bao năm tận tụy trên bục giảng, dìu dắt biết bao thế hệ học trò bằng sự kiên nhẫn và ấm áp.
 Và trên hết, cảm ơn mẹ vì luôn là người mẹ hiền hậu, vất vả lo cho gia đình và cho con khôn lớn từng ngày.
-Chúc cô giáo của chúng con và mẹ yêu của con tuổi mới thật nhiều sức khỏe, bình an và luôn mỉm cười rạng rỡ.
-Con yêu mẹ rất nhiều!</textarea>
+Chúc cô giáo của chúng con và mẹ yêu của con tuổi mới thật nhiều sức khỏe, bình an và luôn mỉm cười rạng rỡ.</textarea>
+            </div>
+            <div>
+                <label class="block text-[11px] font-bold text-slate-600 mb-1">🎁 Điều bất ngờ giấu ở cuối thư:</label>
+                <input id="surpriseInput" type="text" value="Bất ngờ nè: Hôm nay mẹ được nghỉ ngơi, và có một món quà / cái ôm thật chặt đang đợi mẹ!" class="w-full px-3 py-2 text-xs rounded-xl bg-white border border-rose-200 text-slate-700 focus:outline-none focus:border-rose-400">
             </div>
             <div>
                 <label class="block text-[11px] font-bold text-slate-600 mb-1">Lời ký tên ở cuối thư:</label>
@@ -98,7 +108,7 @@ Con yêu mẹ rất nhiều!</textarea>
 
     <!-- MÀN HÌNH ĐỌC BỨC THƯ -->
     <div id="letterScreen" class="hidden envelope-card rounded-3xl max-w-2xl w-full p-6 sm:p-10 space-y-6 z-10 my-4">
-        <div class="flex items-center justify-between border-b border-rose-100 pb-4">
+        <div class="flex items-center justify-between border-b border-rose-100 pb-4 flex-wrap gap-2">
             <div class="flex items-center gap-2.5">
                 <span class="text-2xl">🌹🎂</span>
                 <div>
@@ -120,7 +130,20 @@ Con yêu mẹ rất nhiều!</textarea>
             </div>
         </div>
 
-        <div id="letterBody" class="font-letter text-base sm:text-lg text-slate-700 leading-relaxed space-y-4 min-h-[240px]"></div>
+        <div id="letterBody" class="font-letter text-base sm:text-lg text-slate-700 leading-relaxed space-y-4 min-h-[220px]"></div>
+
+        <!-- NÚT MỞ BẤT NGỜ HIỆN RA SAU KHI ĐỌC XONG THƯ -->
+        <div id="surpriseTriggerWrap" class="letter-line pt-2 text-center">
+            <button onclick="revealSurprise()" class="px-6 py-3 rounded-2xl bg-gradient-to-r from-amber-400 via-rose-500 to-pink-500 text-white font-bold text-xs sm:text-sm shadow-md hover:brightness-105 active:scale-95 transition cursor-pointer">
+                🎁 Bấm Để Mở Bất Ngờ Cuối Thư
+            </button>
+        </div>
+
+        <!-- KHUNG BẤT NGỜ -->
+        <div id="surpriseBox" class="hidden surprise-pop rounded-2xl bg-gradient-to-r from-rose-50 via-amber-50 to-rose-50 border border-rose-200 p-5 text-center space-y-2">
+            <div class="text-3xl">🎂🕯️🎉💐</div>
+            <p id="surpriseMessage" class="font-letter italic text-base sm:text-lg font-semibold text-rose-700"></p>
+        </div>
 
         <div id="letterSignature" class="letter-line pt-4 border-t border-rose-100 flex items-end justify-between">
             <div class="text-xs text-slate-400">💐 Chúc mừng 20/11 & Sinh nhật mẹ</div>
@@ -159,17 +182,17 @@ Con yêu mẹ rất nhiều!</textarea>
             }
         }
 
-        function playSoftNote(freq, duration) {
+        function playSoftNote(freq, duration, type = 'sine', vol = 0.065) {
             if (!audioCtx || !isMusicOn || !isLetterOpen) return;
             const now = audioCtx.currentTime;
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
 
-            osc.type = 'sine';
+            osc.type = type;
             osc.frequency.setValueAtTime(freq, now);
 
             gain.gain.setValueAtTime(0.0001, now);
-            gain.gain.linearRampToValueAtTime(0.065, now + 0.14);
+            gain.gain.linearRampToValueAtTime(vol, now + 0.12);
             gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
 
             osc.connect(gain);
@@ -177,6 +200,28 @@ Con yêu mẹ rất nhiều!</textarea>
 
             osc.start(now);
             osc.stop(now + duration + 0.05);
+        }
+
+        function playSurpriseChime() {
+            initAudio();
+            if (!isMusicOn) return;
+            const chime = [523.25, 659.25, 783.99, 1046.5];
+            chime.forEach((f, idx) => {
+                setTimeout(() => {
+                    const now = audioCtx.currentTime;
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(f, now);
+                    gain.gain.setValueAtTime(0.001, now);
+                    gain.gain.linearRampToValueAtTime(0.09, now + 0.04);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.45);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(now);
+                    osc.stop(now + 0.5);
+                }, idx * 110);
+            });
         }
 
         function startMusic() {
@@ -215,14 +260,14 @@ Con yêu mẹ rất nhiều!</textarea>
             document.getElementById('editorBox').classList.toggle('hidden');
         }
 
-        function spawnPetal() {
+        function spawnPetal(burst = false) {
             if (!isLetterOpen) return;
-            const emojis = ['🌸', '🌹', '✨', '💖'];
+            const emojis = burst ? ['🎉', '✨', '🌹', '🎂', '💖'] : ['🌸', '🌹', '✨', '💖'];
             const el = document.createElement('div');
             el.className = 'petal text-lg sm:text-xl';
             el.innerText = emojis[Math.floor(Math.random() * emojis.length)];
             el.style.left = Math.random() * 100 + 'vw';
-            const duration = 5 + Math.random() * 4;
+            const duration = burst ? (2.5 + Math.random() * 2) : (5 + Math.random() * 4);
             el.style.animationDuration = duration + 's';
             document.body.appendChild(el);
             setTimeout(() => el.remove(), duration * 1000);
@@ -230,7 +275,7 @@ Con yêu mẹ rất nhiều!</textarea>
 
         function startPetals() {
             stopPetals();
-            petalLoop = setInterval(spawnPetal, 650);
+            petalLoop = setInterval(() => spawnPetal(false), 650);
         }
 
         function stopPetals() {
@@ -245,14 +290,31 @@ Con yêu mẹ rất nhiều!</textarea>
             lineTimeouts = [];
         }
 
+        function revealSurprise() {
+            const msg = document.getElementById('surpriseInput').value.trim() ||
+                'Chúc cô giáo và mẹ yêu luôn rạng rỡ, mạnh khỏe và hạnh phúc!';
+            document.getElementById('surpriseMessage').innerText = msg;
+            document.getElementById('surpriseBox').classList.remove('hidden');
+            document.getElementById('surpriseTriggerWrap').classList.add('hidden');
+            playSurpriseChime();
+            for (let i = 0; i < 18; i++) {
+                setTimeout(() => spawnPetal(true), i * 65);
+            }
+        }
+
         function revealLetterLines() {
             clearLineTimers();
             const bodyEl = document.getElementById('letterBody');
             const sigEl = document.getElementById('letterSignature');
+            const triggerEl = document.getElementById('surpriseTriggerWrap');
+            const boxEl = document.getElementById('surpriseBox');
             const signInputVal = document.getElementById('signInput').value.trim() || 'Người con luôn thương mẹ';
             document.getElementById('signatureText').innerText = signInputVal;
 
             sigEl.classList.remove('visible');
+            triggerEl.classList.remove('visible');
+            triggerEl.classList.remove('hidden');
+            boxEl.classList.add('hidden');
             bodyEl.innerHTML = '';
 
             const rawLines = document.getElementById('linesInput').value
@@ -272,10 +334,15 @@ Con yêu mẹ rất nhiều!</textarea>
                 lineTimeouts.push(showTimer);
             });
 
+            const baseEnd = 450 + rawLines.length * 1350;
             const sigTimer = setTimeout(() => {
                 sigEl.classList.add('visible');
-            }, 450 + rawLines.length * 1350 + 300);
-            lineTimeouts.push(sigTimer);
+            }, baseEnd + 250);
+            const triggerTimer = setTimeout(() => {
+                triggerEl.classList.add('visible');
+            }, baseEnd + 900);
+
+            lineTimeouts.push(sigTimer, triggerTimer);
         }
 
         function openLetter() {
