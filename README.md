@@ -83,7 +83,7 @@
         </button>
 
         <button onclick="toggleEditor()" class="text-xs font-semibold text-rose-600 hover:underline cursor-pointer">
-            ✏️ Tùy chỉnh nội dung bức thư & điều bất ngờ
+            ✏️ Tùy chỉnh nội dung, ảnh & điều bất ngờ
         </button>
 
         <div id="editorBox" class="hidden text-left space-y-3 pt-2 border-t border-rose-100">
@@ -95,10 +95,22 @@ Cảm ơn mẹ vì bao năm tận tụy trên bục giảng, dìu dắt biết b
 Và trên hết, cảm ơn mẹ vì luôn là người mẹ hiền hậu, vất vả lo cho gia đình và cho con khôn lớn từng ngày.
 Chúc cô giáo của chúng con và mẹ yêu của con tuổi mới thật nhiều sức khỏe, bình an và luôn mỉm cười rạng rỡ.</textarea>
             </div>
+
+            <div class="space-y-1.5">
+                <label class="block text-[11px] font-bold text-slate-600">📷 Ghép ảnh kỷ niệm cho mẹ (chọn từ máy hoặc dán link):</label>
+                <input id="photoFileInput" type="file" accept="image/*" onchange="handlePhotoFile(this)" class="block w-full text-[11px] text-slate-600 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-rose-100 file:text-rose-700 hover:file:bg-rose-200 cursor-pointer">
+                <input id="photoUrlInput" type="text" placeholder="Hoặc dán link ảnh (https://...) nếu muốn" oninput="handlePhotoUrl(this.value)" class="w-full px-3 py-2 text-xs rounded-xl bg-white border border-rose-200 text-slate-700 focus:outline-none focus:border-rose-400">
+                <div id="photoPreviewWrap" class="hidden pt-1 flex items-center gap-2.5">
+                    <img id="photoPreviewThumb" src="" alt="Xem trước ảnh" class="w-12 h-12 rounded-xl object-cover border border-rose-200">
+                    <span class="text-[11px] text-emerald-700 font-semibold">Đã chọn ảnh! Ảnh sẽ hiện cùng điều bất ngờ.</span>
+                </div>
+            </div>
+
             <div>
                 <label class="block text-[11px] font-bold text-slate-600 mb-1">🎁 Điều bất ngờ giấu ở cuối thư:</label>
                 <input id="surpriseInput" type="text" value="Bất ngờ nè: Hôm nay mẹ được nghỉ ngơi, và có một món quà / cái ôm thật chặt đang đợi mẹ!" class="w-full px-3 py-2 text-xs rounded-xl bg-white border border-rose-200 text-slate-700 focus:outline-none focus:border-rose-400">
             </div>
+
             <div>
                 <label class="block text-[11px] font-bold text-slate-600 mb-1">Lời ký tên ở cuối thư:</label>
                 <input id="signInput" type="text" value="Người con luôn thương mẹ" class="w-full px-3 py-2 text-xs rounded-xl bg-white border border-rose-200 text-slate-700 focus:outline-none focus:border-rose-400">
@@ -139,9 +151,12 @@ Chúc cô giáo của chúng con và mẹ yêu của con tuổi mới thật nhi
             </button>
         </div>
 
-        <!-- KHUNG BẤT NGỜ -->
-        <div id="surpriseBox" class="hidden surprise-pop rounded-2xl bg-gradient-to-r from-rose-50 via-amber-50 to-rose-50 border border-rose-200 p-5 text-center space-y-2">
+        <!-- KHUNG BẤT NGỜ + ẢNH KỶ NIỆM -->
+        <div id="surpriseBox" class="hidden surprise-pop rounded-2xl bg-gradient-to-r from-rose-50 via-amber-50 to-rose-50 border border-rose-200 p-5 text-center space-y-3">
             <div class="text-3xl">🎂🕯️🎉💐</div>
+            <div id="surprisePhotoWrap" class="hidden flex justify-center">
+                <img id="surprisePhotoImg" src="" alt="Ảnh kỷ niệm cùng mẹ" class="max-h-64 w-auto rounded-2xl object-cover border-2 border-white shadow-md">
+            </div>
             <p id="surpriseMessage" class="font-letter italic text-base sm:text-lg font-semibold text-rose-700"></p>
         </div>
 
@@ -160,6 +175,7 @@ Chúc cô giáo của chúng con và mẹ yêu của con tuổi mới thật nhi
         let musicLoop = null;
         let petalLoop = null;
         let lineTimeouts = [];
+        let selectedPhotoSrc = '';
 
         const notes = [
             { freq: 523.25, dur: 0.9 },
@@ -171,6 +187,34 @@ Chúc cô giáo của chúng con và mẹ yêu của con tuổi mới thật nhi
             { freq: 587.33, dur: 0.9 },
             { freq: 783.99, dur: 1.2 }
         ];
+
+        function updatePhotoPreview(src) {
+            selectedPhotoSrc = src.trim();
+            const wrap = document.getElementById('photoPreviewWrap');
+            const thumb = document.getElementById('photoPreviewThumb');
+            if (selectedPhotoSrc) {
+                thumb.src = selectedPhotoSrc;
+                wrap.classList.remove('hidden');
+            } else {
+                thumb.src = '';
+                wrap.classList.add('hidden');
+            }
+        }
+
+        function handlePhotoFile(input) {
+            const file = input.files && input.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                document.getElementById('photoUrlInput').value = '';
+                updatePhotoPreview(e.target.result || '');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function handlePhotoUrl(val) {
+            updatePhotoPreview(val);
+        }
 
         function initAudio() {
             if (!audioCtx) {
@@ -294,6 +338,17 @@ Chúc cô giáo của chúng con và mẹ yêu của con tuổi mới thật nhi
             const msg = document.getElementById('surpriseInput').value.trim() ||
                 'Chúc cô giáo và mẹ yêu luôn rạng rỡ, mạnh khỏe và hạnh phúc!';
             document.getElementById('surpriseMessage').innerText = msg;
+
+            const photoWrap = document.getElementById('surprisePhotoWrap');
+            const photoImg = document.getElementById('surprisePhotoImg');
+            if (selectedPhotoSrc) {
+                photoImg.src = selectedPhotoSrc;
+                photoWrap.classList.remove('hidden');
+            } else {
+                photoImg.src = '';
+                photoWrap.classList.add('hidden');
+            }
+
             document.getElementById('surpriseBox').classList.remove('hidden');
             document.getElementById('surpriseTriggerWrap').classList.add('hidden');
             playSurpriseChime();
