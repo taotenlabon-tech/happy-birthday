@@ -3,397 +3,303 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chúc Mừng 20/11 & Sinh Nhật Mẹ</title>
+    <title>Bức Thư Gửi Mẹ • 20/11 & Sinh Nhật Mẹ</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,700;1,500&display=swap');
         body {
             font-family: 'Quicksand', sans-serif;
-            background: radial-gradient(circle at top, #fff1f2 0%, #ffe4e6 45%, #fef3c7 100%);
-            margin: 0;
-            overflow: hidden;
-            user-select: none;
+            background: radial-gradient(circle at top, #fff1f2 0%, #ffe4e6 50%, #fef3c7 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
         }
-        .font-serif-warm { font-family: 'Playfair Display', serif; }
-        .glass-card {
-            background: rgba(255, 255, 255, 0.85);
+        .font-letter {
+            font-family: 'Playfair Display', serif;
+        }
+        .petal {
+            position: fixed;
+            top: -30px;
+            pointer-events: none;
+            z-index: 5;
+            animation: fallPetal linear forwards;
+        }
+        @keyframes fallPetal {
+            0% {
+                transform: translateY(-20px) translateX(0) rotate(0deg);
+                opacity: 0.9;
+            }
+            100% {
+                transform: translateY(105vh) translateX(45px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        .letter-line {
+            opacity: 0;
+            transform: translateY(12px);
+            transition: opacity 0.9s ease, transform 0.9s ease;
+        }
+        .letter-line.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .envelope-card {
+            background: rgba(255, 255, 255, 0.88);
             backdrop-filter: blur(14px);
-            border: 1px solid rgba(251, 113, 133, 0.3);
-            box-shadow: 0 20px 50px rgba(225, 29, 72, 0.12);
+            border: 1px solid rgba(251, 113, 133, 0.35);
+            box-shadow: 0 24px 60px rgba(225, 29, 72, 0.14);
         }
     </style>
 </head>
-<body class="w-screen h-screen flex items-center justify-center p-3 sm:p-6">
+<body class="flex items-center justify-center p-4 sm:p-6">
 
-    <!-- MÀN HÌNH CHÀO & TÙY CHỈNH LỜI CHÚC -->
-    <div id="startScreen" class="glass-card rounded-3xl max-w-lg w-full p-6 sm:p-8 text-center space-y-5 z-20">
-        <div class="text-4xl sm:text-5xl">💐🎂📚</div>
-        <div class="space-y-1.5">
-            <p class="text-xs font-bold uppercase tracking-widest text-rose-500">20/11 • Ngày Nhà Giáo Việt Nam & Sinh Nhật Mẹ</p>
-            <h1 class="font-serif-warm text-2xl sm:text-3xl font-bold text-slate-800">
-                Món Quà Nhỏ Tặng Mẹ Yêu
+    <!-- MÀN HÌNH PHONG THƯ CHỜ BẤM MỞ -->
+    <div id="envelopeScreen" class="envelope-card rounded-3xl max-w-md w-full p-7 sm:p-9 text-center space-y-6 z-10">
+        <div class="inline-flex items-center justify-center w-24 h-24 rounded-3xl bg-gradient-to-br from-rose-100 to-amber-100 border border-rose-200 shadow-inner text-5xl">
+            ✉️
+        </div>
+
+        <div class="space-y-2">
+            <p class="text-[11px] font-bold uppercase tracking-[0.2em] text-rose-500">
+                20/11 • Ngày Nhà Giáo & Sinh Nhật Mẹ
+            </p>
+            <h1 class="font-letter text-2xl sm:text-3xl font-bold text-slate-800">
+                Một Bức Thư Nhỏ Gửi Mẹ
             </h1>
             <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
-                Di chuyển chuột hoặc ngón tay để hứng hoa tươi, điểm 10 và quà sinh nhật cho mẹ. Hứng đủ <span class="font-bold text-rose-600">20 món quà</span> để mở thiệp chúc mừng đặc biệt!
+                Bấm vào phong thư để mở nhạc nhẹ và đọc từng dòng nhắn gửi tới mẹ.
             </p>
         </div>
 
-        <div class="text-left space-y-2 bg-rose-50/80 p-3.5 rounded-2xl border border-rose-200/70">
-            <label class="block text-[11px] font-bold text-rose-700">✍️ Lời nhắn riêng cho mẹ (có thể sửa):</label>
-            <input id="customWishInput" type="text"
-                value="Chúc mẹ 20/11 luôn rạng rỡ trên bục giảng, sinh nhật tuổi mới thật nhiều sức khỏe và bình an!"
-                class="w-full px-3 py-2 text-xs sm:text-sm rounded-xl bg-white border border-rose-200 text-slate-700 focus:outline-none focus:border-rose-400">
-        </div>
+        <button onclick="openLetter()" class="w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-rose-500 via-pink-500 to-amber-500 text-white font-bold text-sm shadow-lg hover:brightness-105 active:scale-95 transition cursor-pointer">
+            💌 Mở Thư & Bật Nhạc
+        </button>
 
-        <div class="flex flex-col sm:flex-row gap-3 pt-1">
-            <button onclick="startGame()" class="flex-1 py-3.5 px-6 rounded-2xl bg-gradient-to-r from-rose-500 via-pink-500 to-amber-500 text-white font-bold text-sm shadow-lg hover:brightness-105 active:scale-95 transition cursor-pointer">
-                🎁 Bắt Đầu Tặng Quà Cho Mẹ
-            </button>
-            <button onclick="toggleSound()" id="soundBtn" class="py-3.5 px-4 rounded-2xl bg-white border border-rose-200 text-rose-600 font-bold text-xs hover:bg-rose-50 transition cursor-pointer">
-                🔊 Nhạc: Bật
-            </button>
+        <button onclick="toggleEditor()" class="text-xs font-semibold text-rose-600 hover:underline cursor-pointer">
+            ✏️ Tùy chỉnh nội dung bức thư
+        </button>
+
+        <div id="editorBox" class="hidden text-left space-y-3 pt-2 border-t border-rose-100">
+            <div>
+                <label class="block text-[11px] font-bold text-slate-600 mb-1">Các dòng thư (mỗi dòng là một đoạn hiện dần):</label>
+                <textarea id="linesInput" rows="6" class="w-full p-3 text-xs rounded-xl bg-white border border-rose-200 text-slate-700 focus:outline-none focus:border-rose-400">Mẹ kính yêu,
+Nhân ngày 20/11 và cũng là ngày sinh nhật của mẹ, con muốn gửi tới mẹ thật nhiều yêu thương.
+Cảm ơn mẹ vì bao năm tận tụy trên bục giảng, dìu dắt biết bao thế hệ học trò bằng sự kiên nhẫn và ấm áp.
+Và trên hết, cảm ơn mẹ vì luôn là người mẹ hiền hậu, vất vả lo cho gia đình và cho con khôn lớn từng ngày.
+Chúc cô giáo của chúng con và mẹ yêu của con tuổi mới thật nhiều sức khỏe, bình an và luôn mỉm cười rạng rỡ.
+Con yêu mẹ rất nhiều!</textarea>
+            </div>
+            <div>
+                <label class="block text-[11px] font-bold text-slate-600 mb-1">Lời ký tên ở cuối thư:</label>
+                <input id="signInput" type="text" value="Người con luôn thương mẹ" class="w-full px-3 py-2 text-xs rounded-xl bg-white border border-rose-200 text-slate-700 focus:outline-none focus:border-rose-400">
+            </div>
         </div>
     </div>
 
-    <!-- MÀN HÌNH CHƠI GAME -->
-    <div id="gameScreen" class="hidden relative w-full h-full max-w-4xl max-h-[86vh] glass-card rounded-3xl overflow-hidden flex flex-col">
-        <div class="flex items-center justify-between px-4 sm:px-6 py-3 bg-white/70 border-b border-rose-100 z-10">
-            <div class="flex items-center gap-4">
+    <!-- MÀN HÌNH ĐỌC BỨC THƯ -->
+    <div id="letterScreen" class="hidden envelope-card rounded-3xl max-w-2xl w-full p-6 sm:p-10 space-y-6 z-10 my-4">
+        <div class="flex items-center justify-between border-b border-rose-100 pb-4">
+            <div class="flex items-center gap-2.5">
+                <span class="text-2xl">🌹🎂</span>
                 <div>
-                    <div class="text-[10px] font-bold uppercase text-rose-500">Quà Đã Hứng</div>
-                    <div id="scoreText" class="text-lg sm:text-xl font-bold text-slate-800">0 / 20</div>
-                </div>
-                <div class="w-28 sm:w-44 h-3 bg-rose-100 rounded-full overflow-hidden">
-                    <div id="progressBar" class="h-full bg-gradient-to-r from-rose-500 to-amber-400 transition-all duration-200" style="width: 0%"></div>
+                    <div class="text-[10px] font-bold uppercase tracking-widest text-rose-500">20/11 • Happy Birthday Mom</div>
+                    <div class="font-letter text-lg font-bold text-slate-800">Thư Gửi Mẹ Yêu</div>
                 </div>
             </div>
-            <button onclick="backToStart()" class="px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 text-xs font-bold transition cursor-pointer">
-                ↩ Đổi Lời Chúc
-            </button>
-        </div>
 
-        <div class="relative flex-1 w-full overflow-hidden">
-            <canvas id="giftCanvas" class="w-full h-full block touch-none"></canvas>
-            <div id="floatingToast" class="hidden absolute top-4 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full bg-white/90 border border-rose-200 text-rose-600 text-xs font-bold shadow">
-                ☁️ Đám mây bận rộn lướt qua, tránh nhẹ nha!
+            <div class="flex items-center gap-2">
+                <button onclick="toggleMusic()" id="musicToggleBtn" class="px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 text-xs font-bold transition cursor-pointer">
+                    🔊 Nhạc: Bật
+                </button>
+                <button onclick="replayLetter()" class="px-3 py-1.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-700 text-xs font-bold transition cursor-pointer">
+                    ↻ Đọc Lại
+                </button>
+                <button onclick="backToEnvelope()" class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-bold transition cursor-pointer">
+                    ✉️ Đóng Thư
+                </button>
             </div>
         </div>
-    </div>
 
-    <!-- THIỆP CHÚC MỪNG KHI HOÀN THÀNH -->
-    <div id="cardModal" class="hidden fixed inset-0 z-30 bg-rose-950/35 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="glass-card rounded-3xl max-w-md w-full p-6 sm:p-8 text-center space-y-4 relative overflow-hidden">
-            <div class="text-5xl">🎉👩‍🏫🎂🌹</div>
-            <div class="text-xs font-bold uppercase tracking-widest text-rose-500">Happy Birthday & Happy Teachers' Day</div>
-            <h2 class="font-serif-warm text-2xl sm:text-3xl font-bold text-slate-800">
-                Gửi Mẹ Yêu Quý!
-            </h2>
-            <p id="finalWishText" class="text-sm sm:text-base text-slate-700 leading-relaxed italic bg-rose-50/90 p-4 rounded-2xl border border-rose-200/80">
-            </p>
-            <p class="text-xs text-slate-500">
-                Cảm ơn mẹ vì những bài giảng dịu dàng và vòng tay luôn chở che con mỗi ngày.
-            </p>
-            <div class="flex gap-3 pt-2">
-                <button onclick="replayGame()" class="flex-1 py-3 rounded-2xl bg-gradient-to-r from-rose-500 to-amber-500 text-white font-bold text-xs sm:text-sm shadow hover:brightness-105 transition cursor-pointer">
-                    🔄 Chơi Lại
-                </button>
-                <button onclick="backToStart()" class="flex-1 py-3 rounded-2xl bg-white border border-rose-200 text-rose-600 font-bold text-xs sm:text-sm hover:bg-rose-50 transition cursor-pointer">
-                    ✉️ Sửa Lời Chúc
-                </button>
+        <div id="letterBody" class="font-letter text-base sm:text-lg text-slate-700 leading-relaxed space-y-4 min-h-[240px]"></div>
+
+        <div id="letterSignature" class="letter-line pt-4 border-t border-rose-100 flex items-end justify-between">
+            <div class="text-xs text-slate-400">💐 Chúc mừng 20/11 & Sinh nhật mẹ</div>
+            <div id="signatureText" class="font-letter italic text-lg sm:text-xl font-semibold text-rose-600">
+                Người con luôn thương mẹ
             </div>
         </div>
     </div>
 
     <script>
         let audioCtx = null;
-        let soundEnabled = true;
-        let melodyTimer = null;
+        let isMusicOn = true;
+        let isLetterOpen = false;
+        let musicLoop = null;
+        let petalLoop = null;
+        let lineTimeouts = [];
 
-        function ensureAudio() {
+        const notes = [
+            { freq: 523.25, dur: 0.9 },
+            { freq: 659.25, dur: 0.9 },
+            { freq: 783.99, dur: 1.1 },
+            { freq: 659.25, dur: 0.9 },
+            { freq: 587.33, dur: 0.9 },
+            { freq: 440.00, dur: 1.1 },
+            { freq: 587.33, dur: 0.9 },
+            { freq: 783.99, dur: 1.2 }
+        ];
+
+        function initAudio() {
             if (!audioCtx) {
-                const Ctx = window.AudioContext || window.webkitAudioContext;
-                audioCtx = new Ctx();
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                audioCtx = new AudioContext();
             }
             if (audioCtx.state === 'suspended') {
                 audioCtx.resume();
             }
         }
 
-        function playTone(freq, duration = 0.25, type = 'sine', volume = 0.08) {
-            if (!soundEnabled || !audioCtx) return;
+        function playSoftNote(freq, duration) {
+            if (!audioCtx || !isMusicOn || !isLetterOpen) return;
             const now = audioCtx.currentTime;
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
-            osc.type = type;
+
+            osc.type = 'sine';
             osc.frequency.setValueAtTime(freq, now);
-            gain.gain.setValueAtTime(0.001, now);
-            gain.gain.linearRampToValueAtTime(volume, now + 0.03);
+
+            gain.gain.setValueAtTime(0.0001, now);
+            gain.gain.linearRampToValueAtTime(0.065, now + 0.14);
             gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+
             osc.connect(gain);
             gain.connect(audioCtx.destination);
+
             osc.start(now);
-            osc.stop(now + duration + 0.02);
+            osc.stop(now + duration + 0.05);
         }
 
-        function playCollectSound() {
-            playTone(523.25, 0.14, 'triangle', 0.1);
-            setTimeout(() => playTone(659.25, 0.18, 'triangle', 0.1), 70);
+        function startMusic() {
+            stopMusic();
+            if (!isMusicOn) return;
+            let idx = 0;
+            const step = () => {
+                if (!isMusicOn || !isLetterOpen) return;
+                const item = notes[idx % notes.length];
+                playSoftNote(item.freq, item.dur);
+                idx++;
+                musicLoop = setTimeout(step, item.dur * 850);
+            };
+            step();
         }
 
-        function playFanfareSound() {
-            const notes = [523.25, 659.25, 783.99, 1046.5];
-            notes.forEach((n, idx) => {
-                setTimeout(() => playTone(n, 0.35, 'triangle', 0.12), idx * 130);
-            });
-        }
-
-        function startGentleMelody() {
-            stopGentleMelody();
-            if (!soundEnabled) return;
-            const scale = [523.25, 587.33, 659.25, 783.99, 880.00, 783.99, 659.25, 587.33];
-            let i = 0;
-            melodyTimer = setInterval(() => {
-                if (isPlaying && soundEnabled) {
-                    playTone(scale[i % scale.length], 0.4, 'sine', 0.045);
-                    i++;
-                }
-            }, 650);
-        }
-
-        function stopGentleMelody() {
-            if (melodyTimer) {
-                clearInterval(melodyTimer);
-                melodyTimer = null;
+        function stopMusic() {
+            if (musicLoop) {
+                clearTimeout(musicLoop);
+                musicLoop = null;
             }
         }
 
-        function toggleSound() {
-            soundEnabled = !soundEnabled;
-            document.getElementById('soundBtn').innerText = soundEnabled ? '🔊 Nhạc: Bật' : '🔇 Nhạc: Tắt';
-            if (soundEnabled && isPlaying) {
-                ensureAudio();
-                startGentleMelody();
+        function toggleMusic() {
+            isMusicOn = !isMusicOn;
+            document.getElementById('musicToggleBtn').innerText = isMusicOn ? '🔊 Nhạc: Bật' : '🔇 Nhạc: Tắt';
+            if (isMusicOn && isLetterOpen) {
+                initAudio();
+                startMusic();
             } else {
-                stopGentleMelody();
+                stopMusic();
             }
         }
 
-        const TARGET_GIFTS = 20;
-        const goodItems = ['🌹', '🎂', '🌸', '🎁', '⭐', '💯', '💐'];
-        const canvas = document.getElementById('giftCanvas');
-        const ctx = canvas.getContext('2d');
-
-        let isPlaying = false;
-        let score = 0;
-        let animId = null;
-        let spawnTimer = 0;
-        let fallingItems = [];
-        let sparkles = [];
-        let basket = { x: 200, y: 0, width: 88, height: 42 };
-
-        function resizeCanvas() {
-            const rect = canvas.parentElement.getBoundingClientRect();
-            canvas.width = rect.width;
-            canvas.height = rect.height;
-            basket.y = canvas.height - 56;
-            if (!basket.x) basket.x = canvas.width / 2;
+        function toggleEditor() {
+            document.getElementById('editorBox').classList.toggle('hidden');
         }
 
-        function updatePointerX(clientX) {
-            const rect = canvas.getBoundingClientRect();
-            const relX = clientX - rect.left;
-            basket.x = Math.max(basket.width / 2 + 8, Math.min(canvas.width - basket.width / 2 - 8, relX));
+        function spawnPetal() {
+            if (!isLetterOpen) return;
+            const emojis = ['🌸', '🌹', '✨', '💖'];
+            const el = document.createElement('div');
+            el.className = 'petal text-lg sm:text-xl';
+            el.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+            el.style.left = Math.random() * 100 + 'vw';
+            const duration = 5 + Math.random() * 4;
+            el.style.animationDuration = duration + 's';
+            document.body.appendChild(el);
+            setTimeout(() => el.remove(), duration * 1000);
         }
 
-        canvas.addEventListener('mousemove', (e) => {
-            if (isPlaying) updatePointerX(e.clientX);
-        });
+        function startPetals() {
+            stopPetals();
+            petalLoop = setInterval(spawnPetal, 650);
+        }
 
-        canvas.addEventListener('touchmove', (e) => {
-            if (isPlaying && e.touches.length > 0) {
-                e.preventDefault();
-                updatePointerX(e.touches[0].clientX);
+        function stopPetals() {
+            if (petalLoop) {
+                clearInterval(petalLoop);
+                petalLoop = null;
             }
-        }, { passive: false });
-
-        function startGame() {
-            ensureAudio();
-            document.getElementById('startScreen').classList.add('hidden');
-            document.getElementById('cardModal').classList.add('hidden');
-            document.getElementById('gameScreen').classList.remove('hidden');
-
-            resizeCanvas();
-            score = 0;
-            fallingItems = [];
-            sparkles = [];
-            spawnTimer = 0;
-            basket.x = canvas.width / 2;
-            isPlaying = true;
-            updateScoreUI();
-            startGentleMelody();
-
-            if (animId) cancelAnimationFrame(animId);
-            loop();
         }
 
-        function replayGame() {
-            document.getElementById('cardModal').classList.add('hidden');
-            startGame();
+        function clearLineTimers() {
+            lineTimeouts.forEach(t => clearTimeout(t));
+            lineTimeouts = [];
         }
 
-        function backToStart() {
-            isPlaying = false;
-            stopGentleMelody();
-            if (animId) cancelAnimationFrame(animId);
-            document.getElementById('gameScreen').classList.add('hidden');
-            document.getElementById('cardModal').classList.add('hidden');
-            document.getElementById('startScreen').classList.remove('hidden');
-        }
+        function revealLetterLines() {
+            clearLineTimers();
+            const bodyEl = document.getElementById('letterBody');
+            const sigEl = document.getElementById('letterSignature');
+            const signInputVal = document.getElementById('signInput').value.trim() || 'Người con luôn thương mẹ';
+            document.getElementById('signatureText').innerText = signInputVal;
 
-        function updateScoreUI() {
-            document.getElementById('scoreText').innerText = `${score} / ${TARGET_GIFTS}`;
-            const pct = Math.min(100, (score / TARGET_GIFTS) * 100);
-            document.getElementById('progressBar').style.width = `${pct}%`;
-        }
+            sigEl.classList.remove('visible');
+            bodyEl.innerHTML = '';
 
-        function showToast() {
-            const toast = document.getElementById('floatingToast');
-            toast.classList.remove('hidden');
-            clearTimeout(toast._t);
-            toast._t = setTimeout(() => toast.classList.add('hidden'), 1100);
-        }
+            const rawLines = document.getElementById('linesInput').value
+                .split('\n')
+                .map(line => line.trim())
+                .filter(line => line.length > 0);
 
-        function spawnItem() {
-            const isCloud = Math.random() < 0.2;
-            const emoji = isCloud ? '☁️' : goodItems[Math.floor(Math.random() * goodItems.length)];
-            fallingItems.push({
-                x: 36 + Math.random() * Math.max(40, canvas.width - 72),
-                y: -28,
-                vy: (isCloud ? 2.1 : 2.3) + Math.random() * 1.4,
-                emoji,
-                isCloud,
-                size: isCloud ? 30 : 28,
-                sway: Math.random() * Math.PI * 2
+            rawLines.forEach((text, index) => {
+                const p = document.createElement('p');
+                p.className = 'letter-line';
+                p.innerText = text;
+                bodyEl.appendChild(p);
+
+                const showTimer = setTimeout(() => {
+                    p.classList.add('visible');
+                }, 450 + index * 1350);
+                lineTimeouts.push(showTimer);
             });
+
+            const sigTimer = setTimeout(() => {
+                sigEl.classList.add('visible');
+            }, 450 + rawLines.length * 1350 + 300);
+            lineTimeouts.push(sigTimer);
         }
 
-        function addSparkles(x, y, color = '#f43f5e') {
-            for (let i = 0; i < 10; i++) {
-                const angle = (Math.PI * 2 * i) / 10;
-                sparkles.push({
-                    x,
-                    y,
-                    vx: Math.cos(angle) * (1.5 + Math.random() * 2),
-                    vy: Math.sin(angle) * (1.5 + Math.random() * 2),
-                    life: 1,
-                    color
-                });
-            }
+        function openLetter() {
+            initAudio();
+            isLetterOpen = true;
+            document.getElementById('envelopeScreen').classList.add('hidden');
+            document.getElementById('letterScreen').classList.remove('hidden');
+            revealLetterLines();
+            startMusic();
+            startPetals();
         }
 
-        function finishCelebration() {
-            isPlaying = false;
-            stopGentleMelody();
-            playFanfareSound();
-            const customWish = document.getElementById('customWishInput').value.trim();
-            document.getElementById('finalWishText').innerText =
-                `“${customWish || 'Chúc mẹ 20/11 và sinh nhật tuổi mới thật nhiều sức khỏe, niềm vui và hạnh phúc bên gia đình!'}”`;
-            document.getElementById('cardModal').classList.remove('hidden');
+        function replayLetter() {
+            revealLetterLines();
         }
 
-        function loop() {
-            if (!isPlaying) return;
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            spawnTimer++;
-            if (spawnTimer >= 36) {
-                spawnTimer = 0;
-                spawnItem();
-            }
-
-            // Vẽ giỏ quà của mẹ
-            ctx.save();
-            const bx = basket.x - basket.width / 2;
-            const by = basket.y - basket.height / 2;
-            ctx.fillStyle = '#fb7185';
-            ctx.beginPath();
-            ctx.roundRect(bx, by, basket.width, basket.height, 14);
-            ctx.fill();
-            ctx.strokeStyle = '#fff1f2';
-            ctx.lineWidth = 2.5;
-            ctx.stroke();
-
-            ctx.font = '20px sans-serif';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText('🧺', basket.x, basket.y + 1);
-            ctx.restore();
-
-            // Cập nhật vật phẩm rơi
-            for (let i = fallingItems.length - 1; i >= 0; i--) {
-                const item = fallingItems[i];
-                item.y += item.vy;
-                item.sway += 0.05;
-                item.x += Math.sin(item.sway) * 0.6;
-
-                ctx.font = `${item.size}px sans-serif`;
-                ctx.textAlign = 'center';
-                ctx.textBaseline = 'middle';
-                ctx.fillText(item.emoji, item.x, item.y);
-
-                const hitX = Math.abs(item.x - basket.x) < basket.width * 0.55;
-                const hitY = Math.abs(item.y - basket.y) < basket.height * 0.65;
-
-                if (hitX && hitY) {
-                    if (item.isCloud) {
-                        score = Math.max(0, score - 1);
-                        updateScoreUI();
-                        addSparkles(item.x, item.y, '#94a3b8');
-                        showToast();
-                    } else {
-                        score++;
-                        updateScoreUI();
-                        playCollectSound();
-                        addSparkles(item.x, item.y, '#f43f5e');
-                        if (score >= TARGET_GIFTS) {
-                            finishCelebration();
-                            return;
-                        }
-                    }
-                    fallingItems.splice(i, 1);
-                    continue;
-                }
-
-                if (item.y > canvas.height + 35) {
-                    fallingItems.splice(i, 1);
-                }
-            }
-
-            // Hiệu ứng lấp lánh
-            for (let i = sparkles.length - 1; i >= 0; i--) {
-                const s = sparkles[i];
-                s.x += s.vx;
-                s.y += s.vy;
-                s.life -= 0.04;
-                if (s.life <= 0) {
-                    sparkles.splice(i, 1);
-                    continue;
-                }
-                ctx.save();
-                ctx.globalAlpha = Math.max(0, s.life);
-                ctx.fillStyle = s.color;
-                ctx.beginPath();
-                ctx.arc(s.x, s.y, 4, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.restore();
-            }
-
-            animId = requestAnimationFrame(loop);
+        function backToEnvelope() {
+            isLetterOpen = false;
+            stopMusic();
+            stopPetals();
+            clearLineTimers();
+            document.getElementById('letterScreen').classList.add('hidden');
+            document.getElementById('envelopeScreen').classList.remove('hidden');
         }
-
-        window.addEventListener('resize', () => {
-            if (isPlaying) resizeCanvas();
-        });
     </script>
 </body>
 </html>
